@@ -145,8 +145,13 @@ geogsel <- listTofips(geogfips,geogname, datlevel)
 # Generating the data
 if(datlevel == "Counties") {
   sqlLookup = paste0("SELECT year, countyfips, totalhousingunits, households, vacanthousingunits, vacancyrate FROM estimates.county_profiles WHERE countyfips = ", geogsel,";")
-
-  f.chartData <- dbGetQuery(DBPool, sqlLookup) %>%
+  if(geogsel == 14) {   # Fix for Broomfield county
+    f.rawData <- dbGetQuery(DBPool, sqlLookup) %>% filter(year >= 2000)
+  } else {
+    f.rawData <- dbGetQuery(DBPool, sqlLookup)
+  }
+  
+  f.chartData <- f.rawData %>%
     mutate(occupancyrate = 100 - vacancyrate,
            occupiedhousingunits = households,
            yoy_total = totalhousingunits - lag(totalhousingunits),
@@ -178,7 +183,7 @@ totStr <- "Total Housing Units"
 occStr <- "Occupied Housing Units"
 vacStr <- "Vacant Housing Units"
 
-captionSTR <- paste0("Visualization by the State Demography Office, Print Date: ", format(Sys.Date(), "%m/%d/%Y"))
+captionSTR <- paste0("Data and Visualization by the State Demography Office, Print Date: ", format(Sys.Date(), "%m/%d/%Y"))
 
 # tool tip text
 f.chartData$totHU_Text <- paste0("Total Housing Units,", f.chartData$year,": ",NumFmt(f.chartData$totalhousingunits))
@@ -219,11 +224,9 @@ lineCh <- lineCh %>% layout(autosize = T,
                                    tickcolor = 'rgb(127,127,127)',
                                    ticks = 'outside',
                                    zeroline = FALSE),
-                      legend = list(orientation = "h",   # show entries horizontally
-                                    xanchor = "center",  # use center of legend as anchor
-                                    x = 0.8),
+                      legend = list(legend = list(x = 100, y = 0.5)),
                       annotations = list(text=captionSTR, xref = 'paper', x = 0,
-                                         yref = 'paper', y = -0.2,
+                                         yref = 'paper', y = -0.15,
                                          align='left', showarrow=FALSE,
                                          font=list(size=10)))
 
@@ -259,11 +262,9 @@ yoyCh <- yoyCh %>% layout(autosize = T,
                                          tickcolor = 'rgb(127,127,127)',
                                          ticks = 'outside',
                                          zeroline = FALSE),
-                            legend = list(orientation = "h",   # show entries horizontally
-                                        xanchor = "center",  # use center of legend as anchor
-                                        x = 0.8),
+                            legend = list(legend = list(x = 100, y = 0.5)),
                             annotations = list(text=captionSTR, xref = 'paper', x = 0,
-                                               yref = 'paper', y = -0.2,
+                                               yref = 'paper', y = -0.15,
                                                align='left', showarrow=FALSE,
                                                font=list(size=10)))
 
@@ -295,11 +296,9 @@ barCh <- barCh %>% layout(autosize = T,
                                        tickcolor = 'rgb(127,127,127)',
                                        ticks = 'outside',
                                        zeroline = FALSE),
-                          legend = list(orientation = "h",   # show entries horizontally
-                                        xanchor = "center",  # use center of legend as anchor
-                                        x = 0.8),
+                          legend = list(legend = list(x = 100, y = 0.5)),
                           annotations = list(text=captionSTR, xref = 'paper', x = 0,
-                                             yref = 'paper', y = -0.2,
+                                             yref = 'paper', y = -0.15,
                                              align='left', showarrow=FALSE,
                                              font=list(size=10)))
 
