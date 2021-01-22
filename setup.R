@@ -183,7 +183,7 @@ totStr <- "Total Housing Units"
 occStr <- "Occupied Housing Units"
 vacStr <- "Vacant Housing Units"
 
-captionSTR <- paste0("Data and Visualization by the State Demography Office, Print Date: ", format(Sys.Date(), "%m/%d/%Y"))
+captionSTR <- paste0("Data and Visualization by the State Demography Office,<br>Print Date: ", format(Sys.Date(), "%m/%d/%Y"))
 
 # tool tip text
 f.chartData$totHU_Text <- paste0("Total Housing Units,", f.chartData$year,": ",NumFmt(f.chartData$totalhousingunits))
@@ -263,8 +263,8 @@ yoyCh <- yoyCh %>% layout(autosize = T,
                                          ticks = 'outside',
                                          zeroline = FALSE),
                             legend = list(legend = list(x = 100, y = 0.5)),
-                            annotations = list(text=captionSTR, xref = 'paper', x = 0,
-                                               yref = 'paper', y = -0.15,
+                            annotations = list(text=captionSTR, xref = 'paper', x = 100,
+                                               yref = 'paper', y = 0,
                                                align='left', showarrow=FALSE,
                                                font=list(size=10)))
 
