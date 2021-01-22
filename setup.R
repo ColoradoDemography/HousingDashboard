@@ -206,7 +206,7 @@ lineCh <- lineCh %>% add_trace(y = ~occupiedhousingunits, type = 'scatter', mode
 # Annotation
 lineCh <- lineCh %>% add_annotations(text=captionSTR, 
                                      xref = 'paper', yref = 'paper',  
-                                     x = 1.2,  y = 0,
+                                     x = 1.3,  y = 0,
                    align='left', showarrow=FALSE,
                    font=list(size=10))
 
@@ -246,7 +246,7 @@ yoyCh <- yoyCh %>% add_trace(y = ~yoy_occ, type = 'scatter', mode = 'lines+marke
 # Annotation
 yoyCh <- yoyCh %>% add_annotations(text=captionSTR, 
                                      xref = 'paper', yref = 'paper',  
-                                     x = 1.2,  y = 0,
+                                     x = 1.3,  y = 0,
                                      align='left', showarrow=FALSE,
                                      font=list(size=10))
 
@@ -284,7 +284,7 @@ barCh <- barCh %>% add_trace(y = ~vacanthousingunits, type = 'bar',
 # Annotation
 barCh <- barCh %>% add_annotations(text=captionSTR, 
                                      xref = 'paper', yref = 'paper',  
-                                     x = 1.2,  y = 0,
+                                     x = 1.3,  y = 0,
                                      align='left', showarrow=FALSE,
                                      font=list(size=10))
 
