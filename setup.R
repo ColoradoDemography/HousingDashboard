@@ -198,7 +198,15 @@ f.chartData$occR_Text <- paste0("Occupancy Rate, ",f.chartData$year,": ",percent
 lineCh <- plot_ly(f.chartData, x = ~year, y = ~totalhousingunits, type = 'scatter', mode = 'lines+markers',
                line = list(color = 'rgb(0,76,153)'),
                marker = list(color = 'rgb(0,76,153)'),
-               name = totStr, text = ~totHU_Text, hoverinfo = 'text')
+               name = totStr, text = ~totHU_Text, hoverinfo = 'text') %>% 
+                config(
+                  toImageButtonOptions = list(
+                    format = "png",
+                    filename = total_tit,
+                    width = 1000,
+                    height = 500
+                  ))
+
 lineCh <- lineCh %>% add_trace(y = ~occupiedhousingunits, type = 'scatter', mode = 'lines+markers',
                                line = list(color = 'rgb(255,128,0)'),
                                marker = list(color = 'rgb(255,128,0)'),
@@ -206,7 +214,7 @@ lineCh <- lineCh %>% add_trace(y = ~occupiedhousingunits, type = 'scatter', mode
 # Annotation
 lineCh <- lineCh %>% add_annotations(text=captionSTR, 
                                      xref = 'paper', yref = 'paper',  
-                                     x = 1.3,  y = 0,
+                                     x = 1.25,  y = 0,
                    align='left', showarrow=FALSE,
                    font=list(size=10))
 
@@ -233,12 +241,20 @@ lineCh <- lineCh %>% layout(autosize = T,
                       legend = list(legend = list(x = 100, y = 0.5)))
 
 
+
 # Year to Year  Chart
 
 yoyCh <- plot_ly(f.chartData, x = ~year, y = ~yoy_total, type = 'scatter', mode = 'lines+markers',
                   line = list(color = 'rgb(0,76,153)'),
                   marker = list(color = 'rgb(0,76,153)'),
-                  name = totStr, text = ~yoytot_Text, hoverinfo = 'text')
+                  name = totStr, text = ~yoytot_Text, hoverinfo = 'text') %>% 
+                  config(
+                    toImageButtonOptions = list(
+                      format = "png",
+                      filename = yoy_tit,
+                      width = 1000,
+                      height = 500
+                    ))
 yoyCh <- yoyCh %>% add_trace(y = ~yoy_occ, type = 'scatter', mode = 'lines+markers',
                                line = list(color = 'rgb(255,128,0)'),
                                marker = list(color = 'rgb(255,128,0)'),
@@ -246,7 +262,7 @@ yoyCh <- yoyCh %>% add_trace(y = ~yoy_occ, type = 'scatter', mode = 'lines+marke
 # Annotation
 yoyCh <- yoyCh %>% add_annotations(text=captionSTR, 
                                      xref = 'paper', yref = 'paper',  
-                                     x = 1.3,  y = 0,
+                                     x = 1.25,  y = 0,
                                      align='left', showarrow=FALSE,
                                      font=list(size=10))
 
@@ -276,7 +292,14 @@ yoyCh <- yoyCh %>% layout(autosize = T,
 # Stacked Bar Chart for Vacancy Rate 
 barCh <-  plot_ly(f.chartData, x = ~year, y = ~occupiedhousingunits, type = 'bar', 
                           marker = list(color = 'rgb(255,128,0)'),
-                          name = occStr, text = ~occR_Text, hoverinfo = 'text')
+                          name = occStr, text = ~occR_Text, hoverinfo = 'text') %>% 
+                          config(
+                            toImageButtonOptions = list(
+                              format = "png",
+                              filename = bar_tit,
+                              width = 1000,
+                              height = 500
+                            ))
 barCh <- barCh %>% add_trace(y = ~vacanthousingunits, type = 'bar', 
                              marker = list(color = 'rgb(96,96,96)'),
                              name = vacStr, text = ~vacR_Text, hoverinfo = 'text')
@@ -284,7 +307,7 @@ barCh <- barCh %>% add_trace(y = ~vacanthousingunits, type = 'bar',
 # Annotation
 barCh <- barCh %>% add_annotations(text=captionSTR, 
                                      xref = 'paper', yref = 'paper',  
-                                     x = 1.3,  y = 0,
+                                     x = 1.25,  y = 0,
                                      align='left', showarrow=FALSE,
                                      font=list(size=10))
 
