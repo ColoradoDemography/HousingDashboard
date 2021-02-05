@@ -200,18 +200,9 @@ f.chartData$occR_Text <- paste0("Occupancy Rate, ",f.chartData$year,": ",percent
 
 valRange <- f.chartData %>%
             summarize(minYear = min(year),
-                   minH = min(totalhousingunits),
-                   maxH = max(totalhousingunits),
-                   minY = min(yoy_total, na.rm = TRUE),
-                   maxY = max(yoy_total, na.rm = TRUE)
-                   ) %>%
-            mutate( rangeH = maxH - minH,
-                    rangeY = maxY - minY,
-                    minHU = ifelse(minH < 2000,  plyr::round_any(minH, 100, f = ceiling),  plyr::round_any(minH, 1000, f = ceiling)),
-                    rangeHU = ifelse(rangeH < 2000,  plyr::round_any(rangeH/10, 100, f = ceiling),  plyr::round_any(rangeH/10, 1000, f = ceiling)),
-                    minYOY = ifelse(minY < 2000,  plyr::round_any(minY, 100, f = ceiling),  plyr::round_any(minY, 1000, f = ceiling)),
-                    rangeYOY = ifelse(rangeY < 2000,  plyr::round_any(rangeY/10, 100, f = ceiling),  plyr::round_any(rangeY/10, 1000, f = ceiling))
-            )
+                   minHU = min(totalhousingunits),
+                   maxHU = max(totalhousingunits)
+                   ) 
 
 
 # Line Chart
@@ -261,7 +252,6 @@ lineCh <- lineCh %>% layout(autosize = T,
                                    ticks = 'outside',
                                    zeroline = FALSE,
                                    tick0 = valRange$minHU,
-                                   dtick = valRange$rangeHU,
                                    tickformat = ",d"),
                       legend = list(legend = list(x = 100, y = 0.5)))
 
@@ -364,7 +354,6 @@ barCh <- barCh %>% layout(autosize = T,
                                        ticks = 'outside',
                                        zeroline = FALSE,
                                        tick0 = valRange$minHU,
-                                       dtick = valRange$rangeHU * 10,
                                        tickformat = ",d"),
                           legend = list(legend = list(x = 100, y = 0.5)))
 
