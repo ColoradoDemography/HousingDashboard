@@ -1,4 +1,4 @@
-# Unemployment Rate Dashboard  Support functions
+# Housing  Dashboard  Support functions
 # Adam Bickford January 2020
 # 
 
@@ -145,14 +145,15 @@ geogsel <- listTofips(geogfips,geogname, datlevel)
 # Generating the data
 if(datlevel == "Counties") {
   sqlLookup = paste0("SELECT year, countyfips, totalhousingunits, households, vacanthousingunits, vacancyrate FROM estimates.county_profiles WHERE countyfips = ", geogsel,";")
-  if(geogsel == 14) {   # Fix for Broomfield county
-    f.rawData <- dbGetQuery(DBPool, sqlLookup) %>% filter(year >= 2000)
-  } else {
-    f.rawData <- dbGetQuery(DBPool, sqlLookup)
-  }
+ # Adjustment for 2010 data, will change once data for prior to 2000
+ #  if(geogsel == 14) {   # Fix for Broomfield county
+    f.rawData <- dbGetQuery(DBPool, sqlLookup) %>% filter(year >= 2010)
+ # } else {
+ #   f.rawData <- dbGetQuery(DBPool, sqlLookup) %>% filter(year >= 2010)
+ # }
   
   f.chartData <- f.rawData %>%
-    mutate(occupancyrate = 100 - vacancyrate,
+    mutate( occupancyrate = 100 - vacancyrate,
            occupiedhousingunits = households,
            yoy_total = totalhousingunits - lag(totalhousingunits),
            yoy_occ = occupiedhousingunits - lag(occupiedhousingunits),
@@ -194,6 +195,25 @@ f.chartData$vacR_Text <- paste0("Vacancy Rate, ",f.chartData$year,": ",percent(f
 f.chartData$occR_Text <- paste0("Occupancy Rate, ",f.chartData$year,": ",percent(f.chartData$occupancyrate),"<br>Occupied Housing Units: ",NumFmt(f.chartData$occupiedhousingunits))
 
 
+# Creating Tick Ranges Year axis
+
+
+valRange <- f.chartData %>%
+            summarize(minYear = min(year),
+                   minH = min(totalhousingunits),
+                   maxH = max(totalhousingunits),
+                   minY = min(yoy_total, na.rm = TRUE),
+                   maxY = max(yoy_total, na.rm = TRUE)
+                   ) %>%
+            mutate( rangeH = maxH - minH,
+                    rangeY = maxY - minY,
+                    minHU = ifelse(minH < 2000,  plyr::round_any(minH, 100, f = ceiling),  plyr::round_any(minH, 1000, f = ceiling)),
+                    rangeHU = ifelse(rangeH < 2000,  plyr::round_any(rangeH, 100, f = ceiling),  plyr::round_any(rangeH, 1000, f = ceiling)),
+                    minYOY = ifelse(minY < 2000,  plyr::round_any(minY, 100, f = ceiling),  plyr::round_any(minY, 1000, f = ceiling)),
+                    rangeYOY = ifelse(rangeY < 2000,  plyr::round_any(rangeY, 100, f = ceiling),  plyr::round_any(rangeY, 1000, f = ceiling))
+            )
+
+
 # Line Chart
 lineCh <- plot_ly(f.chartData, x = ~year, y = ~totalhousingunits, type = 'scatter', mode = 'lines+markers',
                line = list(color = 'rgb(0,76,153)'),
@@ -229,7 +249,9 @@ lineCh <- lineCh %>% layout(autosize = T,
                                    showticklabels = TRUE,
                                    tickcolor = 'rgb(127,127,127)',
                                    ticks = 'outside',
-                                   zeroline = FALSE),
+                                   zeroline = FALSE,
+                                   tick0 = valRange$minYear,
+                                   dtick = 2),
                       yaxis = list(title = "Housing Units",
                                    gridcolor = 'rgb(255,255,255)',
                                    showgrid = TRUE,
@@ -237,7 +259,10 @@ lineCh <- lineCh %>% layout(autosize = T,
                                    showticklabels = TRUE,
                                    tickcolor = 'rgb(127,127,127)',
                                    ticks = 'outside',
-                                   zeroline = FALSE),
+                                   zeroline = FALSE,
+                                   tick0 = valRange$minHU,
+                                   dtick = valRange$rangeHU,
+                                   tickformat = ",d"),
                       legend = list(legend = list(x = 100, y = 0.5)))
 
 
@@ -271,23 +296,28 @@ yoyCh <- yoyCh %>% layout(autosize = T,
                             title = yoy_tit,
                             paper_bgcolor='rgb(255,255,255)', plot_bgcolor='rgb(229,229,229)',
                             hoverlabel = "right",
-                            xaxis = list(title = "Year",
-                                         gridcolor = 'rgb(255,255,255)',
-                                         showgrid = TRUE,
-                                         showline = FALSE,
-                                         showticklabels = TRUE,
-                                         tickcolor = 'rgb(127,127,127)',
-                                         ticks = 'outside',
-                                         zeroline = TRUE),
-                            yaxis = list(title = "Housing Units",
-                                         gridcolor = 'rgb(255,255,255)',
-                                         showgrid = TRUE,
-                                         showline = FALSE,
-                                         showticklabels = TRUE,
-                                         tickcolor = 'rgb(127,127,127)',
-                                         ticks = 'outside',
-                                         zeroline = FALSE),
-                            legend = list(legend = list(x = 100, y = 0.5)))
+                          xaxis = list(title = "Year",
+                                       gridcolor = 'rgb(255,255,255)',
+                                       showgrid = TRUE,
+                                       showline = FALSE,
+                                       showticklabels = TRUE,
+                                       tickcolor = 'rgb(127,127,127)',
+                                       ticks = 'outside',
+                                       zeroline = FALSE,
+                                       tick0 = valRange$minYear,
+                                       dtick = 2),
+                          yaxis = list(title = "Housing Units",
+                                       gridcolor = 'rgb(255,255,255)',
+                                       showgrid = TRUE,
+                                       showline = FALSE,
+                                       showticklabels = TRUE,
+                                       tickcolor = 'rgb(127,127,127)',
+                                       ticks = 'outside',
+                                       zeroline = FALSE,
+                                       tick0 = valRange$minYOY,
+                                       dtick = valRange$rangeYOY,
+                                       tickformat = ",d"),
+                          legend = list(legend = list(x = 100, y = 0.5)))
 
 # Stacked Bar Chart for Vacancy Rate 
 barCh <-  plot_ly(f.chartData, x = ~year, y = ~occupiedhousingunits, type = 'bar', 
@@ -323,7 +353,9 @@ barCh <- barCh %>% layout(autosize = T,
                                        showticklabels = TRUE,
                                        tickcolor = 'rgb(127,127,127)',
                                        ticks = 'outside',
-                                       zeroline = FALSE),
+                                       zeroline = FALSE,
+                                       tick0 = valRange$minYear,
+                                       dtick = 2),
                           yaxis = list(title = "Housing Units",
                                        gridcolor = 'rgb(255,255,255)',
                                        showgrid = TRUE,
@@ -331,7 +363,10 @@ barCh <- barCh %>% layout(autosize = T,
                                        showticklabels = TRUE,
                                        tickcolor = 'rgb(127,127,127)',
                                        ticks = 'outside',
-                                       zeroline = FALSE),
+                                       zeroline = FALSE,
+                                       tick0 = valRange$minHU,
+                                       dtick = valRange$rangeHU,
+                                       tickformat = ",d"),
                           legend = list(legend = list(x = 100, y = 0.5)))
 
 
