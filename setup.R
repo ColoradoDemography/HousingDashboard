@@ -208,9 +208,9 @@ valRange <- f.chartData %>%
             mutate( rangeH = maxH - minH,
                     rangeY = maxY - minY,
                     minHU = ifelse(minH < 2000,  plyr::round_any(minH, 100, f = ceiling),  plyr::round_any(minH, 1000, f = ceiling)),
-                    rangeHU = ifelse(rangeH < 2000,  plyr::round_any(rangeH, 100, f = ceiling),  plyr::round_any(rangeH, 1000, f = ceiling)),
+                    rangeHU = ifelse(rangeH < 2000,  plyr::round_any(/10, 100, f = ceiling),  plyr::round_any(rangeH/10, 1000, f = ceiling)),
                     minYOY = ifelse(minY < 2000,  plyr::round_any(minY, 100, f = ceiling),  plyr::round_any(minY, 1000, f = ceiling)),
-                    rangeYOY = ifelse(rangeY < 2000,  plyr::round_any(rangeY, 100, f = ceiling),  plyr::round_any(rangeY, 1000, f = ceiling))
+                    rangeYOY = ifelse(rangeY < 2000,  plyr::round_any(rangeY/10, 100, f = ceiling),  plyr::round_any(rangeY/10, 1000, f = ceiling))
             )
 
 
