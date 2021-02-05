@@ -313,9 +313,7 @@ yoyCh <- yoyCh %>% layout(autosize = T,
                                        showticklabels = TRUE,
                                        tickcolor = 'rgb(127,127,127)',
                                        ticks = 'outside',
-                                       zeroline = FALSE,
-                                       tick0 = valRange$minYOY,
-                                       dtick = valRange$rangeYOY,
+                                       zeroline = TRUE,
                                        tickformat = ",d"),
                           legend = list(legend = list(x = 100, y = 0.5)))
 
