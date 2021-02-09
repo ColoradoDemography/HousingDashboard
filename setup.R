@@ -184,7 +184,7 @@ totStr <- "Total Housing Units"
 occStr <- "Occupied Housing Units"
 vacStr <- "Vacant Housing Units"
 
-captionSTR <- paste0("Data and Visualization by the<br>State Demography Office,<br>Print Date: ", format(Sys.Date(), "%m/%d/%Y"))
+captionSTR <- paste0("Data and Visualization by the Colorado State Demography Office.<br>Print Date: ", format(Sys.Date(), "%m/%d/%Y"))
 
 # tool tip text
 f.chartData$totHU_Text <- paste0("Total Housing Units,", f.chartData$year,": ",NumFmt(f.chartData$totalhousingunits))
@@ -206,30 +206,22 @@ valRange <- f.chartData %>%
 
 
 # Line Chart
-lineCh <- plot_ly(f.chartData, x = ~year, y = ~totalhousingunits, type = 'scatter', mode = 'lines+markers',
+lineCh <- plot_ly(width = 1000, height = 500, f.chartData, x = ~year, y = ~totalhousingunits, type = 'scatter', mode = 'lines+markers',
                line = list(color = 'rgb(0,76,153)'),
                marker = list(color = 'rgb(0,76,153)'),
                name = totStr, text = ~totHU_Text, hoverinfo = 'text') %>% 
                 config(
                   toImageButtonOptions = list(
                     format = "png",
-                    filename = total_tit,
-                    width = 1000,
-                    height = 500
+                    filename = total_tit
                   ))
 
 lineCh <- lineCh %>% add_trace(y = ~occupiedhousingunits, type = 'scatter', mode = 'lines+markers',
                                line = list(color = 'rgb(255,128,0)'),
                                marker = list(color = 'rgb(255,128,0)'),
                                name = occStr, text = ~occHU_Text, hoverinfo = 'text')
-# Annotation
-lineCh <- lineCh %>% add_annotations(text=captionSTR, 
-                                     xref = 'paper', yref = 'paper',  
-                                     x = 1.25,  y = 0,
-                   align='left', showarrow=FALSE,
-                   font=list(size=10))
 
-lineCh <- lineCh %>% layout(autosize = T,
+lineCh <- lineCh %>% layout(margin = list(l = 50, r = 50, t = 60, b = 100),
                       title = total_tit,
                       paper_bgcolor='rgb(255,255,255)', plot_bgcolor='rgb(229,229,229)',
                       hoverlabel = "right",
@@ -253,36 +245,32 @@ lineCh <- lineCh %>% layout(autosize = T,
                                    zeroline = FALSE,
                                    tick0 = valRange$minHU,
                                    tickformat = ",d"),
-                      legend = list(legend = list(x = 100, y = 0.5)))
+                      legend = list(legend = list(x = 100, y = 0.5)),
+                      annotations = list(text=captionSTR, 
+                                         xref = 'paper', x = 0,
+                                         yref = 'paper', y = -0.25,
+                                         align='left', showarrow=FALSE,
+                                         font=list(size=10)))
 
 
 
 # Year to Year  Chart
 
-yoyCh <- plot_ly(f.chartData, x = ~year, y = ~yoy_total, type = 'scatter', mode = 'lines+markers',
+yoyCh <- plot_ly(width = 1000, height = 500, f.chartData, x = ~year, y = ~yoy_total, type = 'scatter', mode = 'lines+markers',
                   line = list(color = 'rgb(0,76,153)'),
                   marker = list(color = 'rgb(0,76,153)'),
                   name = totStr, text = ~yoytot_Text, hoverinfo = 'text') %>% 
                   config(
                     toImageButtonOptions = list(
                       format = "png",
-                      filename = yoy_tit,
-                      width = 1000,
-                      height = 500
+                      filename = yoy_tit
                     ))
 yoyCh <- yoyCh %>% add_trace(y = ~yoy_occ, type = 'scatter', mode = 'lines+markers',
                                line = list(color = 'rgb(255,128,0)'),
                                marker = list(color = 'rgb(255,128,0)'),
                                name = occStr, text = ~yoyocc_Text, hoverinfo = 'text')
-# Annotation
-yoyCh <- yoyCh %>% add_annotations(text=captionSTR, 
-                                     xref = 'paper', yref = 'paper',  
-                                     x = 1.25,  y = 0,
-                                     align='left', showarrow=FALSE,
-                                     font=list(size=10))
 
-
-yoyCh <- yoyCh %>% layout(autosize = T,
+yoyCh <- yoyCh %>% layout(margin = list(l = 50, r = 50, t = 60, b = 105),
                             title = yoy_tit,
                             paper_bgcolor='rgb(255,255,255)', plot_bgcolor='rgb(229,229,229)',
                             hoverlabel = "right",
@@ -305,32 +293,29 @@ yoyCh <- yoyCh %>% layout(autosize = T,
                                        ticks = 'outside',
                                        zeroline = TRUE,
                                        tickformat = ",d"),
-                          legend = list(legend = list(x = 100, y = 0.5)))
+                          legend = list(legend = list(x = 100, y = 0.5)),
+                          annotations = list(text=captionSTR, 
+                                             xref = 'paper', x = 0,
+                                             yref = 'paper', y = -0.25,
+                                             align='left', showarrow=FALSE,
+                                             font=list(size=10)))
 
 # Stacked Bar Chart for Vacancy Rate 
 
-barCh <-  plot_ly(f.chartData, x = ~year, y = ~occupiedhousingunits, type = 'bar', 
+barCh <-  plot_ly(width = 1000, height = 500, f.chartData, x = ~year, y = ~occupiedhousingunits, type = 'bar', 
                           marker = list(color = 'rgb(255,128,0)'),
                           name = occStr, text = ~occR_Text, hoverinfo = 'text') %>% 
                           config(
                             toImageButtonOptions = list(
                               format = "png",
-                              filename = bar_tit,
-                              width = 1000,
-                              height = 500
+                              filename = bar_tit
                             ))
 barCh <- barCh %>% add_trace(y = ~vacanthousingunits, type = 'bar', 
                              marker = list(color = 'rgb(96,96,96)'),
                              name = vacStr, text = ~vacR_Text, hoverinfo = 'text')
 
-# Annotation
-barCh <- barCh %>% add_annotations(text=captionSTR, 
-                                     xref = 'paper', yref = 'paper',  
-                                     x = 1.25,  y = 0,
-                                     align='left', showarrow=FALSE,
-                                     font=list(size=10))
 
-barCh <- barCh %>% layout(autosize = T,
+barCh <- barCh %>% layout(margin = list(l = 50, r = 50, t = 60, b = 105),
                           title = bar_tit,
                           paper_bgcolor='rgb(255,255,255)', plot_bgcolor='rgb(229,229,229)',
                           hoverlabel = "right",
@@ -355,7 +340,12 @@ barCh <- barCh %>% layout(autosize = T,
                                        zeroline = FALSE,
                                        tick0 = valRange$minHU,
                                        tickformat = ",d"),
-                          legend = list(legend = list(x = 100, y = 0.5)))
+                          legend = list(legend = list(x = 100, y = 0.5)),
+                          annotations = list(text=captionSTR, 
+                                             xref = 'paper', x = 0,
+                                             yref = 'paper', y = -0.25,
+                                             align='left', showarrow=FALSE,
+                                             font=list(size=10)))
 
 
 #Final Formatting of  f.chartDataOUt
