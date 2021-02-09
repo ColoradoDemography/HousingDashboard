@@ -256,7 +256,7 @@ lineCh <- lineCh %>% layout(margin = list(l = 50, r = 50, t = 60, b = 100),
 
 # Year to Year  Chart
 
-yoyCh <- plot_ly(width = 1000, height = 500, f.chartData, x = ~year, y = ~yoy_total, type = 'scatter', mode = 'lines+markers',
+yoyCh <- plot_ly(width = 950, height = 500, f.chartData, x = ~year, y = ~yoy_total, type = 'scatter', mode = 'lines+markers',
                   line = list(color = 'rgb(0,76,153)'),
                   marker = list(color = 'rgb(0,76,153)'),
                   name = totStr, text = ~yoytot_Text, hoverinfo = 'text') %>% 
@@ -302,7 +302,7 @@ yoyCh <- yoyCh %>% layout(margin = list(l = 50, r = 50, t = 60, b = 105),
 
 # Stacked Bar Chart for Vacancy Rate 
 
-barCh <-  plot_ly(width = 1000, height = 500, f.chartData, x = ~year, y = ~occupiedhousingunits, type = 'bar', 
+barCh <-  plot_ly(width = 950, height = 500, f.chartData, x = ~year, y = ~occupiedhousingunits, type = 'bar', 
                           marker = list(color = 'rgb(255,128,0)'),
                           name = occStr, text = ~occR_Text, hoverinfo = 'text') %>% 
                           config(
