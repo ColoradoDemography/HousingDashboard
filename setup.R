@@ -206,7 +206,7 @@ valRange <- f.chartData %>%
 
 
 # Line Chart
-lineCh <- plot_ly(width = 1000, height = 400, f.chartData, x = ~year, y = ~totalhousingunits, type = 'scatter', mode = 'lines+markers',
+lineCh <- plot_ly(width = 950, height = 500, f.chartData, x = ~year, y = ~totalhousingunits, type = 'scatter', mode = 'lines+markers',
                line = list(color = 'rgb(0,76,153)'),
                marker = list(color = 'rgb(0,76,153)'),
                name = totStr, text = ~totHU_Text, hoverinfo = 'text') %>% 

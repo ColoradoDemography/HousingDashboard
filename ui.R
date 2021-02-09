@@ -11,9 +11,9 @@ function(req) {
                 level=selectInput("level","Select Data Level:", choices=c("Select a Data Level","Counties","Municipalities")),  
                 geog=selectInput("geog","Select a Location:",choices= ""), # Build this from data set
                 goBtn = actionButton("goButton","Generate Charts"),
-                line_chart = plotlyOutput("LINE", width = "1000px", height = "400px"),
-                yoy_chart = plotlyOutput("YOY", width = "1000px", height = "475px"),
-                bar_chart = plotlyOutput("BARCH", width = "1000px", height = "475px"),
+                line_chart = plotlyOutput("LINE", width = "950px", height = "500px"),
+                yoy_chart = plotlyOutput("YOY", width = "950px", height = "500px"),
+                bar_chart = plotlyOutput("BARCH", width = "9500px", height = "500px"),
                 dlBtn = downloadButton("CHDATA","Download Data (CSV)"))
  }
 
